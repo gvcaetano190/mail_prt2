@@ -140,6 +140,14 @@ function plugin_pre_item_add_mailprt2($parm) {
             $input['add_reopen'] = 1;
             $input['itemtype']   = 'Ticket';
 
+            // Limpa o histórico citado do corpo do e-mail, mantendo só a resposta
+            if (!empty($input['content'])) {
+               $input['content'] = plugin_mailprt2_stripQuotedBody($input['content']);
+            }
+            if (!empty($input['content_text'] ?? '')) {
+               $input['content_text'] = plugin_mailprt2_stripQuotedBody($input['content_text']);
+            }
+
             unset($input['urgency'], $input['entities_id'], $input['_ruleid']);
 
             $ticketfollowup->add($input);
@@ -269,5 +277,40 @@ function plugin_mailprt2_getMailReferences(string $threadindex, string $referenc
    return array_filter($messages_id, function ($val) {
       return $val !== '' && $val !== trim('', '< >');
    });
+}
+
+/**
+ * Remove o histórico citado de um corpo de e-mail, mantendo apenas o texto novo.
+ * Tenta detectar padrões comuns como "On ... wrote:" ou "Em ... escreveu:".
+ *
+ * @param string $body
+ * @return string
+ */
+function plugin_mailprt2_stripQuotedBody(string $body): string {
+   $cutPos  = null;
+   $markers = [
+      // Inglês
+      '/On .*?wrote:/is',
+      '/^> .*/m',
+      '/-----Original Message-----/i',
+      // Português
+      '/Em .*?escreveu:/is',
+      '/----- Mensagem original -----/i',
+   ];
+
+   foreach ($markers as $pattern) {
+      if (preg_match($pattern, $body, $m, PREG_OFFSET_CAPTURE)) {
+         $pos = $m[0][1];
+         if ($cutPos === null || $pos < $cutPos) {
+            $cutPos = $pos;
+         }
+      }
+   }
+
+   if ($cutPos !== null && $cutPos > 0) {
+      $body = substr($body, 0, $cutPos);
+   }
+
+   return trim($body);
 }
 
