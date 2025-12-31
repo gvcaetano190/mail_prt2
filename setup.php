@@ -12,6 +12,9 @@ function plugin_init_mailprt2() {
    // obrigatório para proteção CSRF
    $PLUGIN_HOOKS['csrf_compliant']['mailprt2'] = true;
 
+   // link de configuração na lista de plugins
+   $PLUGIN_HOOKS['config_page']['mailprt2'] = 'front/config.form.php';
+
    // adiciona aba de configuração em Config > Geral
    Plugin::registerClass(PluginMailprt2Config::class, [
       'addtabon' => ['Config']
