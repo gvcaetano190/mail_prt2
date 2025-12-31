@@ -12,27 +12,9 @@ Database install / uninstall hooks
  * @return bool
  */
 function plugin_mailprt2_install() {
-   /** @var DBmysql $DB */
-   global $DB;
-
-   // Tabela para controlar message-id já processados
-   if (!$DB->tableExists('glpi_plugin_mail_prt2_message_id')) {
-      $query = "CREATE TABLE `glpi_plugin_mail_prt2_message_id` (
-         `id`               INT UNSIGNED NOT NULL AUTO_INCREMENT,
-         `message_id`       VARCHAR(255) NOT NULL DEFAULT '',
-         `tickets_id`       INT UNSIGNED NOT NULL DEFAULT 0,
-         `mailcollectors_id` INT UNSIGNED NOT NULL DEFAULT 0,
-         PRIMARY KEY (`id`),
-         UNIQUE KEY `uniq_message_mailcollector` (`message_id`,`mailcollectors_id`),
-         KEY `tickets_id` (`tickets_id`)
-      )
-      ENGINE=InnoDB
-      DEFAULT CHARSET=utf8mb4
-      COLLATE=utf8mb4_unicode_ci";
-
-      $DB->queryOrDie($query, 'Create glpi_plugin_mail_prt2_message_id table');
-   }
-
+   // Por enquanto não fazemos alterações diretas no banco,
+   // para evitar o erro "Executing direct queries is not allowed!" do GLPI 11.
+   // A criação de tabelas será feita depois usando a API de migração oficial.
    return true;
 }
 
