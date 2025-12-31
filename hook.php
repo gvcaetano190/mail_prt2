@@ -66,6 +66,18 @@ function plugin_pre_item_add_mailprt2($parm) {
       return;
    }
 
+   // Debug básico: registrar informações principais do email processado
+   try {
+      $subjectLog = $parm->input['name'] ?? '';
+      $headLog    = $parm->input['_head'] ?? [];
+      error_log('[mailprt2] pre_item_add: mailgate=' . $mailgateId
+         . ' subject=' . $subjectLog
+         . ' head_keys=' . implode(',', array_keys((array)$headLog))
+      );
+   } catch (Throwable $e) {
+      // não interrompe o fluxo se logging falhar
+   }
+
    // Load plugin configuration (use_threadindex kept for compatibility)
    $config          = Config::getConfigurationValues('plugin:mailprt2');
    $use_threadindex = !empty($config['use_threadindex']);
