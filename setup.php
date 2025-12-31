@@ -19,6 +19,22 @@ function plugin_init_mailprt2() {
    Plugin::registerClass(PluginMailprt2Config::class, [
       'addtabon' => ['Config']
    ]);
+
+   // hooks para tratamento de tickets criados via coletor de e-mail
+   // pré-criação: deduplicação / conversão em acompanhamento
+   $PLUGIN_HOOKS['pre_item_add']['mailprt2'] = [
+      'Ticket' => 'plugin_pre_item_add_mailprt2',
+   ];
+
+   // pós-criação: atualizar tabela de controle com o ID do ticket
+   $PLUGIN_HOOKS['item_add']['mailprt2'] = [
+      'Ticket' => 'plugin_item_add_mailprt2',
+   ];
+
+   // purge: limpeza de registros órfãos
+   $PLUGIN_HOOKS['item_purge']['mailprt2'] = [
+      'Ticket' => 'plugin_item_purge_mailprt2',
+   ];
 }
 
 function plugin_version_mailprt2() {
