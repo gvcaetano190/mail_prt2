@@ -14,6 +14,9 @@ Database install / uninstall hooks
 function plugin_mailprt2_install() {
    global $DB;
 
+   // Migration object, as used in official example plugin
+   $migration = new Migration(PLUGIN_MAILPRT2_VERSION);
+
    $default_charset   = DBConnection::getDefaultCharset();
    $default_collation = DBConnection::getDefaultCollation();
    $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
