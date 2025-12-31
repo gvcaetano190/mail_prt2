@@ -26,39 +26,39 @@ along with this plugin. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------
  */
 
-define("PLUGIN_MAILANALYZER_VERSION", "4.0.0");
+define("PLUGIN_MAIL_PRT2_VERSION", "1.0.0");
 // Minimal GLPI version, inclusive
-define('PLUGIN_MAILANALYZER_MIN_GLPI', '11.0.0');
+define('PLUGIN_MAIL_PRT2_MIN_GLPI', '11.0.0');
 // Maximum GLPI version, exclusive
-define('PLUGIN_MAILANALYZER_MAX_GLPI', '12.0');
+define('PLUGIN_MAIL_PRT2_MAX_GLPI', '12.0');
 
 /**
  * Summary of plugin_init_mailanalyzer
  * Init the hooks of the plugins
  */
-function plugin_init_mailanalyzer() {
+function plugin_init_mail_prt2() {
 
    global $PLUGIN_HOOKS;
 
-   Plugin::registerClass('PluginMailanalyzerMailanalyzer');
+   Plugin::registerClass('PluginMailPrt2Mailprt2');
 
-   $PLUGIN_HOOKS['csrf_compliant']['mailanalyzer'] = true;
+   $PLUGIN_HOOKS['csrf_compliant']['mail_prt2'] = true;
 
-   $PLUGIN_HOOKS['pre_item_add']['mailanalyzer'] = [
-      'Ticket' => ['PluginMailanalyzerMailanalyzer', 'plugin_pre_item_add_mailanalyzer'],
+   $PLUGIN_HOOKS['pre_item_add']['mail_prt2'] = [
+      'Ticket' => ['PluginMailPrt2Mailprt2', 'plugin_pre_item_add_mail_prt2'],
    ];
 
-   $PLUGIN_HOOKS['item_add']['mailanalyzer'] = [
-      'Ticket' => ['PluginMailanalyzerMailanalyzer', 'plugin_item_add_mailanalyzer']
+   $PLUGIN_HOOKS['item_add']['mail_prt2'] = [
+      'Ticket' => ['PluginMailPrt2Mailprt2', 'plugin_item_add_mail_prt2']
    ];
 
-   $PLUGIN_HOOKS['item_purge']['mailanalyzer'] = [
-      'Ticket' => ['PluginMailanalyzerMailanalyzer', 'plugin_item_purge_mailanalyzer']
+   $PLUGIN_HOOKS['item_purge']['mail_prt2'] = [
+      'Ticket' => ['PluginMailPrt2Mailprt2', 'plugin_item_purge_mail_prt2']
    ];
 
     if (Session::haveRightsOr("config", [READ, UPDATE])) {
-        Plugin::registerClass('PluginMailanalyzerConfig', ['addtabon' => 'Config']);
-        $PLUGIN_HOOKS['config_page']['mailanalyzer'] = 'front/config.form.php';
+        Plugin::registerClass('PluginMailPrt2Config', ['addtabon' => 'Config']);
+        $PLUGIN_HOOKS['config_page']['mail_prt2'] = 'front/config.form.php';
     }
 
 }
@@ -69,17 +69,17 @@ function plugin_init_mailanalyzer() {
  * Get the name and the version of the plugin
  * @return array
  */
-function plugin_version_mailanalyzer() {
+function plugin_version_mail_prt2() {
    return [
-      'name'         => __('Mail Analyzer'),
-      'version'      => PLUGIN_MAILANALYZER_VERSION,
-      'author'       => 'Olivier Moron',
+      'name'         => __('Mail PRT2'),
+      'version'      => PLUGIN_MAIL_PRT2_VERSION,
+      'author'       => 'Gabriel Caetano',
       'license'      => 'GPLv2+',
-      'homepage'     => 'https://github.com/tomolimo/mailanalyzer',
+      'homepage'     => 'https://github.com/gvcaetano190/mail_prt2',
       'requirements' => [
          'glpi' => [
-            'min' => PLUGIN_MAILANALYZER_MIN_GLPI,
-            'max' => PLUGIN_MAILANALYZER_MAX_GLPI
+            'min' => PLUGIN_MAIL_PRT2_MIN_GLPI,
+            'max' => PLUGIN_MAIL_PRT2_MAX_GLPI
             ]
          ]
    ];
@@ -91,10 +91,10 @@ function plugin_version_mailanalyzer() {
  * check prerequisites before install : may print errors or add to message after redirect
  * @return bool
  */
-function plugin_mailanalyzer_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, PLUGIN_MAILANALYZER_MIN_GLPI, 'lt')
-       || version_compare(GLPI_VERSION, PLUGIN_MAILANALYZER_MAX_GLPI, 'ge')) {
-      echo "This plugin requires GLPI >= " . PLUGIN_MAILANALYZER_MIN_GLPI ." and < " . PLUGIN_MAILANALYZER_MAX_GLPI;
+function plugin_mail_prt2_check_prerequisites() {
+   if (version_compare(GLPI_VERSION, PLUGIN_MAIL_PRT2_MIN_GLPI, 'lt')
+       || version_compare(GLPI_VERSION, PLUGIN_MAIL_PRT2_MAX_GLPI, 'ge')) {
+      echo "This plugin requires GLPI >= " . PLUGIN_MAIL_PRT2_MIN_GLPI ." and < " . PLUGIN_MAIL_PRT2_MAX_GLPI;
       return false;
    }
    return true;
@@ -105,7 +105,7 @@ function plugin_mailanalyzer_check_prerequisites() {
  * Summary of plugin_mailanalyzer_check_config
  * @return bool
  */
-function plugin_mailanalyzer_check_config() {
+function plugin_mail_prt2_check_config() {
    return true;
 }
 

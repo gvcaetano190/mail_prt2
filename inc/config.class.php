@@ -1,15 +1,15 @@
 <?php
 /*
 -------------------------------------------------------------------------
-MailAnalyzer plugin for GLPI
-Copyright (C) 2011-2025 by Raynet SAS a company of A.Raymond Network.
+Mail PRT2 plugin for GLPI
+Copyright (C) 2025 by Gabriel Caetano
 
-https://www.araymond.com/
+https://github.com/gvcaetano190/mail_prt2
 -------------------------------------------------------------------------
 
 LICENSE
 
-This file is part of MailAnalyzer plugin for GLPI.
+This file is part of Mail PRT2 plugin for GLPI.
 
 This file is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ along with this plugin. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------
  */
 
-class PluginMailanalyzerConfig extends CommonDBTM {
+class PluginMailPrt2Config extends CommonDBTM {
 
    /**
     * Summary of getTypeName
@@ -34,7 +34,7 @@ class PluginMailanalyzerConfig extends CommonDBTM {
     * @return mixed
     */
    static function getTypeName($nb = 0) {
-      return __('Mail Analyzer setup', 'mailanalyzer');
+      return __('Mail PRT2 setup', 'mail_prt2');
    }
 
    /**
@@ -43,7 +43,7 @@ class PluginMailanalyzerConfig extends CommonDBTM {
     * @return mixed
     */
    function getName($with_comment = 0) {
-      return __('MailAnalyzer', 'mailanalyzer');
+      return __('Mail PRT2', 'mail_prt2');
    }
 
 
@@ -53,17 +53,17 @@ class PluginMailanalyzerConfig extends CommonDBTM {
     * @return boolean
     */
    static function showConfigForm($item) {
-      $config = Config::getConfigurationValues('plugin:mailanalyzer');
+      $config = Config::getConfigurationValues('plugin:mail_prt2');
 
       // GLPI 11: Use htmlescape() for output
       echo "<form name='form' action=\"" . htmlescape(Toolbox::getItemTypeFormURL('Config')) . "\" method='post' data-track-changes='true'>";
       echo "<div class='center' id='tabsbody'>";
       echo "<table class='tab_cadre_fixe'>";
 
-      echo "<tr><th colspan='4'>" . htmlescape(__('Mail Analyzer setup', 'mailanalyzer')) . "</th></tr>";
+      echo "<tr><th colspan='4'>" . htmlescape(__('Mail PRT2 setup', 'mail_prt2')) . "</th></tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >" . htmlescape(__('Use of Thread index', 'mailanalyzer')) . "</td><td >";
+      echo "<td >" . htmlescape(__('Use of Thread index', 'mail_prt2')) . "</td><td >";
       if (!isset($config['use_threadindex'])) {
           $config['use_threadindex'] = 0;
       }
@@ -79,7 +79,7 @@ class PluginMailanalyzerConfig extends CommonDBTM {
       echo "</table></div>";
 
       echo "<input type='hidden' name='id' value='1'>";
-      echo "<input type='hidden' name='config_context' value='plugin:mailanalyzer'>";
+      echo "<input type='hidden' name='config_context' value='plugin:mail_prt2'>";
 
       Html::closeForm();
 
@@ -89,7 +89,7 @@ class PluginMailanalyzerConfig extends CommonDBTM {
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item->getType()=='Config') {
-         return __('Mail Analyzer', 'mailanalyzer');
+         return __('Mail PRT2', 'mail_prt2');
       }
       return '';
    }
@@ -104,4 +104,3 @@ class PluginMailanalyzerConfig extends CommonDBTM {
    }
 
 }
-

@@ -1,15 +1,15 @@
 <?php
 /*
 -------------------------------------------------------------------------
-MailAnalyzer plugin for GLPI
-Copyright (C) 2011-2025 by Raynet SAS a company of A.Raymond Network.
+Mail PRT2 plugin for GLPI
+Copyright (C) 2025 by Gabriel Caetano
 
-https://www.araymond.com/
+https://github.com/gvcaetano190/mail_prt2
 -------------------------------------------------------------------------
 
 LICENSE
 
-This file is part of MailAnalyzer plugin for GLPI.
+This file is part of Mail PRT2 plugin for GLPI.
 
 This file is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,127 +24,159 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------
--*/
+ */
 
-use Laminas\Mail\Storage\Message;
+use Laminas\Mail\Storage\Imap;
+use Laminas\Mail\Storage\Pop3;
 
-class PluginMailanalyzerMailCollector extends CommonDBTM
-{
-    private $storage;
-    public $uid = -1;
+/**
+ * Class PluginMailPrt2MailCollector
+ * Wrapper for mail connection handling
+ */
+class PluginMailPrt2MailCollector {
 
-    public static function getTable($classname = null) {
-        return MailCollector::getTable();
-    }
+   private $storage = null;
+   private $mailgateID;
+   private $fields = [];
 
-    public function connect(): void
-    {
-        $config = Toolbox::parseMailServerConnectString($this->fields['host']);
+   /**
+    * Summary of __construct
+    * @param mixed $mailgateID the mailgate ID
+    */
+   function __construct($mailgateID) {
+      $this->mailgateID = $mailgateID;
+   }
 
-        $params = [
-            'host'      => $config['address'],
-            'user'      => $this->fields['login'],
-            'password'  => (new GLPIKey())->decrypt($this->fields['passwd']),
-            'port'      => $config['port']
-        ];
+   /**
+    * Summary of connect
+    * Connect to mail server using GLPI's MailCollector fields
+    * @return bool
+    */
+   public function connect(): bool {
+      global $DB;
+      
+      // Get mailcollector configuration
+      $iterator = $DB->request([
+         'FROM' => 'glpi_mailcollectors',
+         'WHERE' => ['id' => $this->mailgateID]
+      ]);
+      
+      if (count($iterator) === 0) {
+         return false;
+      }
 
-        if ($config['ssl']) {
-            $params['ssl'] = 'SSL';
-        }
+      $row = $iterator->current();
+      $this->fields = $row;
 
-        if ($config['tls']) {
-            $params['ssl'] = 'TLS';
-        }
+      try {
+         // Determine connection type
+         $host = $row['host'] ?? '';
+         $login = $row['login'] ?? '';
+         
+         // GLPI 11: Get password using proper method
+         $password = (new GLPIKey())->decrypt($row['passwd'] ?? '');
+         
+         // Determine SSL/TLS settings
+         $ssl = false;
+         $port = 143; // Default IMAP port
+         
+         if (strpos($host, 'ssl://') === 0) {
+            $ssl = 'SSL';
+            $host = substr($host, 6);
+            $port = 993;
+         } elseif (strpos($host, 'tls://') === 0) {
+            $ssl = 'TLS';
+            $host = substr($host, 6);
+         }
+         
+         // Check for custom port
+         if (preg_match('/^(.+):(\d+)\//', $host, $matches)) {
+            $host = $matches[1];
+            $port = (int)$matches[2];
+         } elseif (preg_match('/^(.+):(\d+)$/', $host, $matches)) {
+            $host = $matches[1];
+            $port = (int)$matches[2];
+         }
+         
+         // Remove any remaining protocol prefix
+         $host = preg_replace('/^[a-z]+:\/\//', '', $host);
+         
+         // Determine if IMAP or POP3
+         $isImap = (strpos($row['host'] ?? '', 'imap') !== false) || 
+                   ($port == 143 || $port == 993);
+         
+         $config = [
+            'host'     => $host,
+            'user'     => $login,
+            'password' => $password,
+            'port'     => $port,
+         ];
+         
+         if ($ssl) {
+            $config['ssl'] = $ssl;
+         }
+         
+         if ($isImap) {
+            $this->storage = new Imap($config);
+         } else {
+            $this->storage = new Pop3($config);
+         }
+         
+         return true;
+         
+      } catch (Exception $e) {
+         Toolbox::logError("Mail PRT2: Connection failed - " . $e->getMessage());
+         return false;
+      }
+   }
 
-        if (!empty($config['mailbox'])) {
-            $params['folder'] = mb_convert_encoding($config['mailbox'], 'UTF7-IMAP', 'UTF-8');
-        }
+   /**
+    * Summary of getHeaders
+    * @param int $index Message index
+    * @return mixed Headers object or false
+    */
+   public function getHeaders(int $index) {
+      if ($this->storage === null) {
+         return false;
+      }
+      
+      try {
+         $message = $this->storage->getMessage($index);
+         return $message->getHeaders();
+      } catch (Exception $e) {
+         Toolbox::logError("Mail PRT2: Failed to get headers for message $index - " . $e->getMessage());
+         return false;
+      }
+   }
 
-        if ($config['validate-cert'] === false) {
-            $params['novalidatecert'] = true;
-        }
+   /**
+    * Summary of getStorage
+    * @return mixed Storage object
+    */
+   public function getStorage() {
+      return $this->storage;
+   }
 
-        try {
-            $storage = Toolbox::getMailServerStorageInstance($config['type'], $params);
-            if ($storage === null) {
-                throw new \Exception(sprintf(__('Unsupported mail server type:%s.'), $config['type']));
-            }
-            $this->storage = $storage;
-            if ($this->fields['errors'] > 0) {
-                $this->update([
-                    'id'     => $this->getID(),
-                    'errors' => 0
-                ]);
-            }
-        } catch (\Throwable $e) {
-            $this->update([
-                'id'     => $this->getID(),
-                'errors' => ($this->fields['errors'] + 1)
-            ]);
-           // Any errors will cause an Exception.
-            throw $e;
-        }
-    }
+   /**
+    * Summary of getFields
+    * @return array
+    */
+   public function getFields(): array {
+      return $this->fields;
+   }
 
-    /**
-     * Summary of getThreadIndex
-     * @param Message $message 
-     * @return string|null
-     */
-    public function getThreadIndex(Message $message): ?string {
-        if (isset($message->threadindex)) {
-            if ($val = $message->getHeader('threadindex')) {
-                return bin2hex(substr(base64_decode($val->getFieldValue()), 6, 16 ));
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Summary of getMessage
-     * @param mixed $uid 
-     * @return Message
-     */
-    public function getMessage($uid): Message {
-        return $this->storage->getMessage($this->storage->getNumberByUniqueId($uid));
-    }
-
-    /**
-     * Delete mail from that mail box
-     *
-     * @param string $uid    mail UID
-     * @param string $folder Folder to move (delete if empty) (default '')
-     *
-     * @return boolean
-     **/
-    public function deleteMails($uid, $folder = ''): bool
-    {
-
-       // Disable move support, POP protocol only has the INBOX folder
-        if (strstr($this->fields['host'], "/pop")) {
-            $folder = '';
-        }
-
-        if (!empty($folder) && isset($this->fields[$folder]) && !empty($this->fields[$folder])) {
-            $name = mb_convert_encoding($this->fields[$folder], "UTF7-IMAP", "UTF-8");
-            try {
-                $this->storage->moveMessage($this->storage->getNumberByUniqueId($uid), $name);
-                return true;
-            } catch (\Throwable $e) {
-               // raise an error and fallback to delete
-                trigger_error(
-                    sprintf(
-                    //TRANS: %1$s is the name of the folder, %2$s is the name of the receiver
-                        __('Invalid configuration for %1$s folder in receiver %2$s'),
-                        $folder,
-                        $this->getName()
-                    )
-                );
-            }
-        }
-        $this->storage->removeMessage($this->storage->getNumberByUniqueId($uid));
-        return true;
-    }
-
+   /**
+    * Summary of close
+    * Close the mail connection
+    */
+   public function close(): void {
+      if ($this->storage !== null) {
+         try {
+            $this->storage->close();
+         } catch (Exception $e) {
+            // Ignore close errors
+         }
+         $this->storage = null;
+      }
+   }
 }
-
