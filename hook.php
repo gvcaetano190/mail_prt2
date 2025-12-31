@@ -13,70 +13,8 @@ function plugin_mail_prt2_uninstall() {
    // nada para remover
    return true;
 }
+
 // Nenhuma lógica adicional por enquanto
-                  return;
-
-               } else {
-                  // ticket creation, but linked to the closed one...
-                  $parm->input['_link'] = ['link' => '1', 'tickets_id_1' => '0', 'tickets_id_2' => $row['tickets_id']];
-               }
-            }
-         }
-
-         // can't find ref into DB, then this is a new ticket, in this case insert refs and message_id into DB
-         $messages_id[] = $messageId;
-
-         // this is a new ticket
-         // then add references and message_id to DB
-         foreach ($messages_id as $ref) {
-            $res = $DB->request([
-               'FROM' => 'glpi_plugin_mail_prt2_message_id',
-               'WHERE' => [
-                  'message_id' => $ref,
-                  'mailcollectors_id' => $mailgateId
-               ]
-            ]);
-            if (count($res) <= 0) {
-               $DB->insert('glpi_plugin_mail_prt2_message_id', ['message_id' => $ref, 'mailcollectors_id' => $mailgateId]);
-            }
-         }
-      }
-   }
-
-
-    /**
-     * Summary of plugin_item_add_mail_prt2
-     * @param mixed $parm
-     */
-   public static function plugin_item_add_mail_prt2($parm): void {
-      /** @var \DBmysql $DB */
-      global $DB;
-      if (isset($parm->input['_mailgate'])) {
-         // this ticket have been created via email receiver.
-         // update the ticket ID for the message_id only for newly created tickets (tickets_id == 0)
-
-         // Are 'Thread-Index' or 'Refrences' present?
-         $messages_id = self::getMailReferences(
-             $parm->input['_head']['threadindex'] ?? '',
-             $parm->input['_head']['references'] ?? ''
-             );
-         // GLPI 11: html_entity_decode is no longer needed
-         $messages_id[] = $parm->input['_head']['message_id'];
-
-         $DB->update(
-            'glpi_plugin_mail_prt2_message_id',
-            [
-               'tickets_id' => $parm->fields['id']
-            ],
-            [
-               'AND' => [
-                  'tickets_id'  => 0,
-                  'message_id' => $messages_id
-               ]
-            ]
-         );
-      }
-   }
 
 
    /**
