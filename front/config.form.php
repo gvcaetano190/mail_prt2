@@ -4,7 +4,7 @@
 Mail PRT2 plugin for GLPI
 Copyright (C) 2025 by Gabriel Caetano
 
-https://github.com/gvcaetano190/mail_prt2
+https://github.com/gvcaetano190/mailprt2
 -------------------------------------------------------------------------
 
 LICENSE
@@ -28,6 +28,6 @@ along with this plugin. If not, see <http://www.gnu.org/licenses/>.
 
 // GLPI 11: No need to include inc/includes.php anymore - it is loaded automatically
 
-Session::setActiveTab('Config', 'PluginMailPrt2Config$1');
+Session::setActiveTab('Config', 'PluginMailprt2Config$1');
 Html::redirect($CFG_GLPI["root_doc"]."/front/config.form.php");
 

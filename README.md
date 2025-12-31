@@ -9,9 +9,9 @@ Based on the original Mail Analyzer plugin by Olivier Moron.
 
 ## Installation
 
-1. Download the plugin from: https://github.com/gvcaetano190/mail_prt2/releases
+1. Download the plugin from: https://github.com/gvcaetano190/mailprt2/releases
 2. Extract the zip file
-3. Copy the `mail_prt2` folder into *glpifolder*/plugins/
+3. Copy the `mailprt2` folder into *glpifolder*/plugins/
 4. Go to Setup > Plugins in GLPI
 5. Install and Enable the plugin
 
@@ -59,7 +59,7 @@ After installation, go to Setup > General > Mail PRT2 tab to configure the plugi
 ## Issues and Support
 
 Please report any questions or problems in the issue section:
-https://github.com/gvcaetano190/mail_prt2/issues
+https://github.com/gvcaetano190/mailprt2/issues
 
 ## License
 

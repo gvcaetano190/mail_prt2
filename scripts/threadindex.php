@@ -4,7 +4,7 @@
 Mail PRT2 plugin for GLPI
 Copyright (C) 2025 by Gabriel Caetano
 
-https://github.com/gvcaetano190/mail_prt2
+https://github.com/gvcaetano190/mailprt2
 -------------------------------------------------------------------------
 
 LICENSE

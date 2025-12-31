@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
    <name>Mail PRT2</name>
-   <key>mail_prt2</key>
+   <key>mailprt2</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/gvcaetano190/mail_prt2/main/plugin.png</logo>
+   <logo>https://raw.githubusercontent.com/gvcaetano190/mailprt2/main/plugin.png</logo>
    <description>
       <short>
          <en><![CDATA[Mail PRT2 GLPI Plugin may be used to automatically combine CC mails into one Ticket]]></en>
@@ -14,10 +14,10 @@
          <pt_BR><![CDATA[Isso resolve o problema de Tickets duplicados quando um email é enviado para o GLPI e CC para outros, e quando esses destinatários CC usam 'Responder a Todos', o GLPI por padrão criará um novo ticket. No caso de emails ping pong, ele adicionará as respostas como acompanhamentos ao Ticket inicialmente criado pelo primeiro email.]]></pt_BR>
       </long>
    </description>
-   <homepage>https://github.com/gvcaetano190/mail_prt2</homepage>
-   <download>https://github.com/gvcaetano190/mail_prt2/releases</download>
-   <issues>https://github.com/gvcaetano190/mail_prt2/issues</issues>
-   <readme>https://github.com/gvcaetano190/mail_prt2/blob/main/README.md</readme>
+   <homepage>https://github.com/gvcaetano190/mailprt2</homepage>
+   <download>https://github.com/gvcaetano190/mailprt2/releases</download>
+   <issues>https://github.com/gvcaetano190/mailprt2/issues</issues>
+   <readme>https://github.com/gvcaetano190/mailprt2/blob/main/README.md</readme>
    <authors>
       <author>Gabriel Caetano</author>
    </authors>
@@ -25,7 +25,7 @@
       <version>
          <num>1.0.0</num>
          <compatibility>~11.0.0</compatibility>
-         <download_url>https://github.com/gvcaetano190/mail_prt2/releases/download/1.0.0/mail_prt2-1.0.0.zip</download_url>
+         <download_url>https://github.com/gvcaetano190/mailprt2/releases/download/1.0.0/mailprt2-1.0.0.zip</download_url>
       </version>
    </versions>
    <langs>

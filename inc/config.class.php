@@ -4,7 +4,7 @@
 Mail PRT2 plugin for GLPI
 Copyright (C) 2025 by Gabriel Caetano
 
-https://github.com/gvcaetano190/mail_prt2
+https://github.com/gvcaetano190/mailprt2
 -------------------------------------------------------------------------
 
 LICENSE
@@ -26,7 +26,7 @@ along with this plugin. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------
  */
 
-class PluginMailPrt2Config extends CommonDBTM {
+class PluginMailprt2Config extends CommonDBTM {
 
    /**
     * Summary of getTypeName
@@ -34,7 +34,7 @@ class PluginMailPrt2Config extends CommonDBTM {
     * @return mixed
     */
    static function getTypeName($nb = 0) {
-      return __('Mail PRT2 setup', 'mail_prt2');
+      return __('Mail PRT2 setup', 'mailprt2');
    }
 
    /**
@@ -43,7 +43,7 @@ class PluginMailPrt2Config extends CommonDBTM {
     * @return mixed
     */
    function getName($with_comment = 0) {
-      return __('Mail PRT2', 'mail_prt2');
+      return __('Mail PRT2', 'mailprt2');
    }
 
 
@@ -53,17 +53,17 @@ class PluginMailPrt2Config extends CommonDBTM {
     * @return boolean
     */
    static function showConfigForm($item) {
-      $config = Config::getConfigurationValues('plugin:mail_prt2');
+      $config = Config::getConfigurationValues('plugin:mailprt2');
 
       // GLPI 11: Use htmlescape() for output
       echo "<form name='form' action=\"" . htmlescape(Toolbox::getItemTypeFormURL('Config')) . "\" method='post' data-track-changes='true'>";
       echo "<div class='center' id='tabsbody'>";
       echo "<table class='tab_cadre_fixe'>";
 
-      echo "<tr><th colspan='4'>" . htmlescape(__('Mail PRT2 setup', 'mail_prt2')) . "</th></tr>";
+      echo "<tr><th colspan='4'>" . htmlescape(__('Mail PRT2 setup', 'mailprt2')) . "</th></tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >" . htmlescape(__('Use of Thread index', 'mail_prt2')) . "</td><td >";
+      echo "<td >" . htmlescape(__('Use of Thread index', 'mailprt2')) . "</td><td >";
       if (!isset($config['use_threadindex'])) {
           $config['use_threadindex'] = 0;
       }
@@ -79,7 +79,7 @@ class PluginMailPrt2Config extends CommonDBTM {
       echo "</table></div>";
 
       echo "<input type='hidden' name='id' value='1'>";
-      echo "<input type='hidden' name='config_context' value='plugin:mail_prt2'>";
+      echo "<input type='hidden' name='config_context' value='plugin:mailprt2'>";
 
       Html::closeForm();
 
@@ -89,7 +89,7 @@ class PluginMailPrt2Config extends CommonDBTM {
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item->getType()=='Config') {
-         return __('Mail PRT2', 'mail_prt2');
+         return __('Mail PRT2', 'mailprt2');
       }
       return '';
    }
