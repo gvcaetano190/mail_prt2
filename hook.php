@@ -17,6 +17,9 @@ function plugin_mailprt2_install() {
    // Migration object, as used in official example plugin
    $migration = new Migration(PLUGIN_MAILPRT2_VERSION);
 
+   // Simple log to confirm install hook is executed
+   error_log('mailprt2: running plugin_mailprt2_install');
+
    $default_charset   = DBConnection::getDefaultCharset();
    $default_collation = DBConnection::getDefaultCollation();
    $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
@@ -32,8 +35,9 @@ function plugin_mailprt2_install() {
                   UNIQUE KEY `uniq_message_mailcollector` (`message_id`,`mailcollectors_id`),
                   KEY `tickets_id` (`tickets_id`)
                ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+   error_log('mailprt2: creating table glpi_plugin_mail_prt2_message_id');
 
-      $DB->doQuery($query);
+   $DB->doQuery($query);
    }
 
    return true;
