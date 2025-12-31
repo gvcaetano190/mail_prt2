@@ -65,39 +65,34 @@ function plugin_init_mail_prt2() {
 
 
 /**
- * Summary of plugin_version_mailanalyzer
+ * Summary of plugin_version_mail_prt2
  * Get the name and the version of the plugin
  * @return array
  */
 function plugin_version_mail_prt2() {
    return [
-      'name'         => __('Mail PRT2'),
-      'version'      => PLUGIN_MAIL_PRT2_VERSION,
-      'author'       => 'Gabriel Caetano',
-      'license'      => 'GPLv2+',
-      'homepage'     => 'https://github.com/gvcaetano190/mail_prt2',
-      'requirements' => [
-         'glpi' => [
-            'min' => PLUGIN_MAIL_PRT2_MIN_GLPI,
-            'max' => PLUGIN_MAIL_PRT2_MAX_GLPI
-            ]
-         ]
+      'name'           => __('Mail PRT2', 'mail_prt2'),
+      'version'        => PLUGIN_MAIL_PRT2_VERSION,
+      'author'         => 'Gabriel Caetano',
+      'license'        => 'GPLv2+',
+      'homepage'       => 'https://github.com/gvcaetano190/mail_prt2',
+      'minGlpiVersion' => '11.0'
    ];
 }
 
 
 /**
- * Summary of plugin_mailanalyzer_check_prerequisites
+ * Summary of plugin_mail_prt2_check_prerequisites
  * check prerequisites before install : may print errors or add to message after redirect
  * @return bool
  */
 function plugin_mail_prt2_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, PLUGIN_MAIL_PRT2_MIN_GLPI, 'lt')
-       || version_compare(GLPI_VERSION, PLUGIN_MAIL_PRT2_MAX_GLPI, 'ge')) {
-      echo "This plugin requires GLPI >= " . PLUGIN_MAIL_PRT2_MIN_GLPI ." and < " . PLUGIN_MAIL_PRT2_MAX_GLPI;
+   if (version_compare(GLPI_VERSION, '11.0', '>=')) {
+      return true;
+   } else {
+      echo "GLPI version NOT compatible. Requires GLPI >= 11.0";
       return false;
    }
-   return true;
 }
 
 
