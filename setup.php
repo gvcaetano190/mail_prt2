@@ -1,15 +1,15 @@
 <?php
 /*
 -------------------------------------------------------------------------
-MailAnalyzer plugin for GLPI
-Copyright (C) 2011-2025 by Raynet SAS a company of A.Raymond Network.
+Mail PRT2 plugin for GLPI
+Copyright (C) 2025 by Gabriel Caetano
 
-https://www.araymond.com/
+https://github.com/gvcaetano190/mail_prt2
 -------------------------------------------------------------------------
 
 LICENSE
 
-This file is part of MailAnalyzer plugin for GLPI.
+This file is part of Mail PRT2 plugin for GLPI.
 
 This file is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -71,12 +71,20 @@ function plugin_init_mail_prt2() {
  */
 function plugin_version_mail_prt2() {
    return [
-      'name'           => __('Mail PRT2', 'mail_prt2'),
-      'version'        => PLUGIN_MAIL_PRT2_VERSION,
-      'author'         => 'Gabriel Caetano',
-      'license'        => 'GPLv2+',
-      'homepage'       => 'https://github.com/gvcaetano190/mail_prt2',
-      'minGlpiVersion' => '11.0'
+      'name'         => __('Mail PRT2', 'mail_prt2'),
+      'version'      => PLUGIN_MAIL_PRT2_VERSION,
+      'author'       => 'Gabriel Caetano',
+      'license'      => 'GPLv2+',
+      'homepage'     => 'https://github.com/gvcaetano190/mail_prt2',
+      'requirements' => [
+         'glpi' => [
+            'min' => PLUGIN_MAIL_PRT2_MIN_GLPI,
+            'max' => PLUGIN_MAIL_PRT2_MAX_GLPI
+         ],
+         'php' => [
+            'min' => '8.1'
+         ]
+      ]
    ];
 }
 
